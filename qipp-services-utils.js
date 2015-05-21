@@ -5,7 +5,7 @@
 
     angular.module('qipp-services-utils', [])
 
-        .factory('$analytics', ['$window', function ($window) {
+        .factory('analytics', ['$window', function ($window) {
             return function (method) {
                 var analytics = $window.analytics;
                 return analytics[method].apply(
@@ -15,7 +15,7 @@
             };
         }])
 
-        .factory('$cssProperties', function () {
+        .factory('cssProperties', function () {
             return function (element) {
                 var properties = {};
                 angular.forEach(['webkitTrans', 'MozTrans', 'trans'], function (prop) {
@@ -32,7 +32,7 @@
             };
         })
 
-        .factory('$windowLocation', ['$window', function ($window) {
+        .factory('windowLocation', ['$window', function ($window) {
             return $window.location;
         }]);
 
