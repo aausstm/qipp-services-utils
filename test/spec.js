@@ -90,6 +90,32 @@
 
         });
 
+        describe('deepExtend', function () {
+
+            it('Should provide a deepExtend method', inject(
+                function (deepExtend) {
+                    var obj1 = {key: {sub1: 'value1'}},
+                        obj2 = {key: {sub2: 'value2'}},
+                        arr1 = [1, 2, 3],
+                        arr2 = [];
+                    arr2[3] = 4;
+                    expect(deepExtend).toBeDefined();
+                    expect(deepExtend({}, obj1, obj2))
+                        .toEqual({key: {sub1: 'value1', sub2: 'value2'}});
+                    expect(deepExtend(obj1))
+                        .toEqual({key: {sub1: 'value1'}});
+                    expect(deepExtend(arr1, arr2))
+                        .toEqual([1, 2, 3, 4]);
+                    expect(deepExtend([1, 2, 3], undefined, [undefined, 4]))
+                        .toEqual([1, 4, 3]);
+                    deepExtend(obj1, obj2);
+                    expect(obj1)
+                        .toEqual({key: {sub1: 'value1', sub2: 'value2'}});
+                }
+            ));
+
+        });
+
         describe('analytics', function () {
 
             it('Should track analytics calls.', inject(
