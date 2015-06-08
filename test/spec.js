@@ -1,4 +1,4 @@
-/* global beforeEach, describe, expect, inject, it, module */
+/* global angular, beforeEach, describe, document, expect, inject, it, jasmine, module, spyOn */
 
 (function () {
     'use strict';
@@ -92,7 +92,7 @@
 
         describe('deepExtend', function () {
 
-            it('Should provide a deepExtend method', inject(
+            it('Should provide a deepExtend method.', inject(
                 function (deepExtend) {
                     var obj1 = {key: {sub1: 'value1'}},
                         obj2 = {key: {sub2: 'value2'}},
@@ -111,6 +111,85 @@
                     deepExtend(obj1, obj2);
                     expect(obj1)
                         .toEqual({key: {sub1: 'value1', sub2: 'value2'}});
+                }
+            ));
+
+        });
+
+        describe('getScript', function () {
+
+            var mockDocument,
+                script = 'script-to-load.js';
+
+	        beforeEach(module(function($provide) {
+		        mockDocument = {
+			        createElement: angular.bind(document, document.createElement),
+			        head: jasmine.createSpyObj('document.head', ['appendChild']),
+			        body: jasmine.createSpyObj('document.body', ['appendChild'])
+		        };
+		        spyOn(mockDocument, 'createElement').and.callThrough();
+		        $provide.value('$document', [mockDocument]);
+	        }));
+
+            it('Should provide a getScript method.', inject(
+                function(getScript) {
+			        expect(getScript).toBeDefined();
+		        }
+            ));
+
+            it('Should provide a getScript method.', inject(
+                function(getScript) {
+			        getScript();
+		        }
+            ));
+
+            it('Should append a new script element to the document body.', inject(
+                function(getScript) {
+			        getScript(script);
+			        expect(mockDocument.createElement).toHaveBeenCalledWith('script');
+			        expect(mockDocument.body.appendChild).toHaveBeenCalled();
+			        var scriptElement = mockDocument.body.appendChild.calls.mostRecent().args[0];
+			        expect(scriptElement.tagName.toLowerCase()).toEqual('script');
+			        expect(scriptElement.src).toEqual('http://localhost:1337/' + script);
+		        }
+            ));
+
+            it('Should resolve the returned promise when the script is loaded.', inject(
+                function ($timeout, getScript) {
+                    var resolved = false,
+                        scriptElement;
+                    getScript(script).success(function () {
+                        resolved = true;
+                    });
+                    scriptElement = mockDocument.body.appendChild.calls.mostRecent().args[0];
+			        scriptElement.onload({});
+                    expect(resolved).toBeFalsy();
+                    $timeout.flush();
+                    expect(resolved).toBeTruthy();
+                }
+            ));
+
+             it('Should reject the returned promise if the script failed to load.', inject(
+                function ($timeout, getScript) {
+                    var rejected = false,
+                        scriptElement;
+                    getScript('erroneous-route').error(function () {
+                        rejected = true;
+                    });
+                    scriptElement = mockDocument.body.appendChild.calls.mostRecent().args[0];
+			        scriptElement.onerror({});
+                    expect(rejected).toBeFalsy();
+                    $timeout.flush();
+                    expect(rejected).toBeTruthy();
+                }
+            ));
+
+            it('Should only append the script tag once with multiple calls.', inject(
+                function (getScript) {
+                    getScript(script);
+                    getScript(script);
+                    getScript(script);
+			        expect(mockDocument.body.appendChild.calls.all().length).toBe(1);
                 }
             ));
 

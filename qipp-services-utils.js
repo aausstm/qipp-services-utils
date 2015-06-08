@@ -10,14 +10,15 @@
             function (
                 $window
             ) {
-            return function (method) {
-                var analytics = $window.analytics;
-                return analytics[method].apply(
-                    analytics,
-                    [].slice.call(arguments, 1)
-                );
-            };
-        }])
+                return function (method) {
+                    var analytics = $window.analytics;
+                    return analytics[method].apply(
+                        analytics,
+                        [].slice.call(arguments, 1)
+                    );
+                };
+            }
+        ])
 
         .factory('cssProperties', function () {
             return function (element) {
@@ -70,12 +71,71 @@
             };
         })
 
+        .factory('getScript', [
+            '$document',
+            '$timeout',
+            '$q',
+            function (
+                $document,
+                $timeout,
+                $q
+            ) {
+                // This service provide a method to dynamically
+                // append a given script to the DOM and load it.
+                function load(createElement){
+				    var promises = {};
+				    return function(url) {
+					    if (!promises[url]) {
+                            var deferred = $q.defer(),
+						        element = createElement(url),
+                                onload = function (event) {
+							        $timeout(function () {
+								        deferred.resolve(event);
+							        });
+						        },
+                                onerror = function (event) {
+							        $timeout(function () {
+								        deferred.reject(event);
+							        });
+						        };
+                            // Create event listeners
+                            // Load event
+						    element.onload =
+                                element.onreadystatechange =
+                                onload;
+                            // Error event
+						    element.onerror =
+                                onerror;
+						    promises[url] = deferred.promise;
+                            // Create success and error states
+                            promises[url].success = function (cb) {
+                                promises[url].then(cb);
+                                return promises[url];
+                            };
+                            promises[url].error = function (cb) {
+                                promises[url].then(null, cb);
+                                return promises[url];
+                            };
+					    }
+					    return promises[url];
+				    };
+			    }
+                return load(function (src) {
+				    var script = $document[0].createElement('script');
+				    script.src = src;
+				    $document[0].body.appendChild(script);
+				    return script;
+			    });
+            }
+        ])
+
         .factory('windowLocation', [
             '$window',
             function (
                 $window
             ) {
-            return $window.location;
-        }]);
+                return $window.location;
+            }
+        ]);
 
 }());
