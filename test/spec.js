@@ -121,37 +121,37 @@
             var mockDocument,
                 script = 'script-to-load.js';
 
-	        beforeEach(module(function($provide) {
-		        mockDocument = {
-			        createElement: angular.bind(document, document.createElement),
-			        head: jasmine.createSpyObj('document.head', ['appendChild']),
-			        body: jasmine.createSpyObj('document.body', ['appendChild'])
-		        };
-		        spyOn(mockDocument, 'createElement').and.callThrough();
-		        $provide.value('$document', [mockDocument]);
-	        }));
+            beforeEach(module(function($provide) {
+                mockDocument = {
+                    createElement: angular.bind(document, document.createElement),
+                    head: jasmine.createSpyObj('document.head', ['appendChild']),
+                    body: jasmine.createSpyObj('document.body', ['appendChild'])
+                };
+                spyOn(mockDocument, 'createElement').and.callThrough();
+                $provide.value('$document', [mockDocument]);
+            }));
 
             it('Should provide a getScript method.', inject(
                 function(getScript) {
-			        expect(getScript).toBeDefined();
-		        }
+                    expect(getScript).toBeDefined();
+                }
             ));
 
             it('Should provide a getScript method.', inject(
                 function(getScript) {
-			        getScript();
-		        }
+                    getScript();
+                }
             ));
 
             it('Should append a new script element to the document body.', inject(
                 function(getScript) {
-			        getScript(script);
-			        expect(mockDocument.createElement).toHaveBeenCalledWith('script');
-			        expect(mockDocument.body.appendChild).toHaveBeenCalled();
-			        var scriptElement = mockDocument.body.appendChild.calls.mostRecent().args[0];
-			        expect(scriptElement.tagName.toLowerCase()).toEqual('script');
-			        expect(scriptElement.src).toEqual('http://localhost:1337/' + script);
-		        }
+                    getScript(script);
+                    expect(mockDocument.createElement).toHaveBeenCalledWith('script');
+                    expect(mockDocument.body.appendChild).toHaveBeenCalled();
+                    var scriptElement = mockDocument.body.appendChild.calls.mostRecent().args[0];
+                    expect(scriptElement.tagName.toLowerCase()).toEqual('script');
+                    expect(scriptElement.src).toEqual('http://localhost:1337/' + script);
+                }
             ));
 
             it('Should resolve the returned promise when the script is loaded.', inject(
@@ -162,7 +162,7 @@
                         resolved = true;
                     });
                     scriptElement = mockDocument.body.appendChild.calls.mostRecent().args[0];
-			        scriptElement.onload({});
+                    scriptElement.onload({});
                     expect(resolved).toBeFalsy();
                     $timeout.flush();
                     expect(resolved).toBeTruthy();
@@ -177,7 +177,7 @@
                         rejected = true;
                     });
                     scriptElement = mockDocument.body.appendChild.calls.mostRecent().args[0];
-			        scriptElement.onerror({});
+                    scriptElement.onerror({});
                     expect(rejected).toBeFalsy();
                     $timeout.flush();
                     expect(rejected).toBeTruthy();
@@ -189,7 +189,7 @@
                     getScript(script);
                     getScript(script);
                     getScript(script);
-			        expect(mockDocument.body.appendChild.calls.all().length).toBe(1);
+                    expect(mockDocument.body.appendChild.calls.all().length).toBe(1);
                 }
             ));
 
