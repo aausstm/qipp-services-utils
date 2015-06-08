@@ -83,30 +83,30 @@
                 // This service provide a method to dynamically
                 // append a given script to the DOM and load it.
                 function load(createElement){
-				    var promises = {};
-				    return function(url) {
-					    if (!promises[url]) {
+                    var promises = {};
+                    return function(url) {
+                        if (!promises[url]) {
                             var deferred = $q.defer(),
-						        element = createElement(url),
+                                element = createElement(url),
                                 onload = function (event) {
-							        $timeout(function () {
-								        deferred.resolve(event);
-							        });
-						        },
+                                    $timeout(function () {
+                                        deferred.resolve(event);
+                                    });
+                                },
                                 onerror = function (event) {
-							        $timeout(function () {
-								        deferred.reject(event);
-							        });
-						        };
+                                    $timeout(function () {
+                                        deferred.reject(event);
+                                    });
+                                };
                             // Create event listeners
                             // Load event
-						    element.onload =
+                            element.onload =
                                 element.onreadystatechange =
                                 onload;
                             // Error event
-						    element.onerror =
+                            element.onerror =
                                 onerror;
-						    promises[url] = deferred.promise;
+                            promises[url] = deferred.promise;
                             // Create success and error states
                             promises[url].success = function (cb) {
                                 promises[url].then(cb);
@@ -116,16 +116,16 @@
                                 promises[url].then(null, cb);
                                 return promises[url];
                             };
-					    }
-					    return promises[url];
-				    };
-			    }
+                        }
+                        return promises[url];
+                    };
+                }
                 return load(function (src) {
-				    var script = $document[0].createElement('script');
-				    script.src = src;
-				    $document[0].body.appendChild(script);
-				    return script;
-			    });
+                    var script = $document[0].createElement('script');
+                    script.src = src;
+                    $document[0].body.appendChild(script);
+                    return script;
+                });
             }
         ])
 
