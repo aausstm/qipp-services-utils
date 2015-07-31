@@ -50,7 +50,7 @@ var ext,
     obj = {
     propA: 123,
     propB: 456
-};
+    };
 ext = deepExtend(
     obj,
     {propC: 789}
