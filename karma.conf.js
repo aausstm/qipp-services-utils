@@ -23,6 +23,12 @@
                 '/script-to-load.js': 'http://localhost:1337/script-to-load.js'
             },
             exclude: [],
+            plugins: [
+                'karma-chrome-launcher',
+                'karma-coverage',
+                'karma-firefox-launcher',
+                'karma-jasmine'
+            ],
             preprocessors: {
                 'qipp-services-utils.js': ['coverage']
             },
