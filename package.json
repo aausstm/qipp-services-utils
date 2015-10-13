@@ -10,12 +10,13 @@
   ],
   "homepage": "https://www.qipp.com/",
   "author": {
-    "name": "AQUANTUM",
-    "url": "http://www.aquantum.de/"
+    "name": "qipp",
+    "email": "dev@qipp.com",
+    "url": "https://qipp.com/"
   },
   "repository": {
     "type": "git",
-    "url": "ssh://git@bitbucket.org:aquantum/qipp-services-utils.git"
+    "url": "https://github.com/qipp/qipp-services-utils"
   },
   "devDependencies": {
     "angular": "1.4.0",
