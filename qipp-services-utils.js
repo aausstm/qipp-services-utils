@@ -103,9 +103,7 @@
                             };
                         // Create event listeners.
                         // Load event.
-                        element.onload =
-                            element.onreadystatechange =
-                            onload;
+                        element.onload = onload;
                         // Error event.
                         element.onerror = onerror;
                         if (promises[url]) {
