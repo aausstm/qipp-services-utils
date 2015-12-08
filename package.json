@@ -1,6 +1,6 @@
 {
   "name": "qipp-services-utils",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "title": "Utilities service",
   "description": "Utilities service for Angular application.",
   "keywords": [
