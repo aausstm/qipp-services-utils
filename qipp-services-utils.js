@@ -109,8 +109,10 @@
                         if (promises[url]) {
                             srcSelector = 'script[src^="' + url + '"]';
                             oldScript = document.querySelector(srcSelector);
-                            oldScript.remove();
-                        }
+                            if (oldScript.parentNode) {
+                              // remove node from the tree
+                              oldScript.parentNode.removeChild(oldScript);
+                            }                        }
                         promises[url] = deferred.promise;
                         // Create success and error states.
                         promises[url].success = function (cb) {
